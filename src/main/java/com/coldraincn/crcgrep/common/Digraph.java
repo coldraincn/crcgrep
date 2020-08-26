@@ -2,6 +2,7 @@ package com.coldraincn.crcgrep.common;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class Digraph {
     private static final String NEWLINE = System.getProperty("line.separator");
@@ -48,6 +49,15 @@ public class Digraph {
         for(int v = 0;v < V;v++){
             adj[v] = new ArrayList<Integer>();
         }
+        for(int v = 0;v < G.V();v++){
+            Stack<Integer> reverse = new Stack<Integer>();
+            for(int w:G.adj[v]){
+                reverse.push(w);
+            }
+            for(int w :reverse){
+                adj[v].add(w);
+            }
+        }
         
     }
     public int V(){
@@ -58,7 +68,7 @@ public class Digraph {
     }
     private void validateVertex(int v){
         if(v < 0 || v >= V){
-            throw new IllegalArgumentException("vertex " + v + " is not between 0 and " + (V-1))
+            throw new IllegalArgumentException("vertex " + v + " is not between 0 and " + (V-1));
         }
     }
     public void addEdge(int v,int w){
@@ -82,7 +92,13 @@ public class Digraph {
     }
 
     public Digraph reverse(){
-
+        Digraph reverse = new Digraph(V);
+        for(int v = 0;v < v;v++){
+            for(int w:adj[v]){
+                reverse.addEdge(w, v);
+            }
+        }
+        return reverse;
     }
     public String toString(){
         StringBuilder s = new StringBuilder();
@@ -96,5 +112,10 @@ public class Digraph {
         }
         return s.toString();
 
+    }
+    public static void main(String[] args) {
+        // In in = new In(args[0]);
+        // Digraph G = new Digraph(in);
+        // StdOut.println(G);
     }
 }
