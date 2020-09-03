@@ -9,37 +9,37 @@ public class NFA {
     public NFA(String grep){
         m = grep.length();
         dg = new Digraph(m+1);
-        var stack = new Stack<Integer>();
+        Stack<Integer> ops = new Stack<Integer>();
         for(int i = 0;i < m;i++){
-            //左括号和分隔符，存入栈中
-            if(grep.charAt(i) == '(' || grep.charAt(i) == '|'){
-                stack.push(i);
-            }   
-            //右括号，处理分隔符和*   
-            if(grep.charAt(i) == ')'){
-                if(grep.charAt(i+1) == '*'){
-                    var stackHead = stack.peek();
-                    if(stackHead != '('){
-                        stackHead =stack.peek();
-                    }
-                    dg.addEdge(stackHead, i+1);
-                    dg.addEdge(i+1, stackHead);
-                }else{
-                    var stackHead = stack.peek();
-                    if(grep.charAt(stackHead) == '|'){
-                        dg.addEdge(stackHead, i+1);
-                        stack.pop();
-                        var leftClose = stack.pop();
-                        dg.addEdge(leftClose, stackHead+1);
-                    }else{
-                        stack.pop();
-                    }
+            int lp = i; 
+            if (grep.charAt(i) == '(' || grep.charAt(i) == '|') 
+                ops.push(i); 
+            else if (grep.charAt(i) == ')') {
+                int or = ops.pop(); 
+
+                // 2-way or operator
+                if (grep.charAt(or) == '|') { 
+                    lp = ops.pop();
+                    dg.addEdge(lp, or+1);
+                    dg.addEdge(or, i);
                 }
-                
-            }else{
+                else if (grep.charAt(or) == '(')
+                    lp = or;
+                else assert false;
+            } 
+
+            // closure operator (uses 1-character lookahead)
+            if (i < m-1 && grep.charAt(i+1) == '*') { 
+                dg.addEdge(lp, i+1); 
+                dg.addEdge(i+1, lp); 
+            } 
+            if (grep.charAt(i) == '(' || grep.charAt(i) == '*' || grep.charAt(i) == ')') {
                 dg.addEdge(i, i+1);
             }
+               
         }
+        if (ops.size() != 0)
+            throw new IllegalArgumentException("Invalid regular expression");
     }
     
 }
