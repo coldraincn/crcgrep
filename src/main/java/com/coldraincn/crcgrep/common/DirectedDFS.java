@@ -52,7 +52,7 @@ public class DirectedDFS {
      */
     public boolean marked(int v){
         validateVertex(v);
-        return marked(v);
+        return marked[v];
     }
     /**
      * Returns the number of vertices reachable from the source vertex
