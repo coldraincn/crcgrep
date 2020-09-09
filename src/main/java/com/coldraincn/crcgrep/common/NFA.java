@@ -1,12 +1,15 @@
 package com.coldraincn.crcgrep.common;
 
+import java.io.BufferedReader;
+import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.Stack;
 
 public class NFA {
-    int m;//正则字符串个长度
-    Digraph dg ;
-    String regexp; 
+    private final int m;//正则字符串个长度
+    private Digraph dg ;
+    private String regexp;
 
     public NFA(String grep){
         this.regexp = grep;
@@ -56,13 +59,12 @@ public class NFA {
         for(int i = 0;i<n;i++){
             if (txt.charAt(i) == '*' || txt.charAt(i) == '|' || txt.charAt(i) == '(' || txt.charAt(i) == ')')
                 throw new IllegalArgumentException("text contains the metacharacter '" + txt.charAt(i) + "'");
-            char nowChar = txt.charAt(i);
             var match = new ArrayList<Integer>();
             for(int j:direList){
                 if(j == m){
                     continue;
                 }
-                if(regexp.charAt(j) == nowChar | regexp.charAt(j) == '.'){
+                if(regexp.charAt(j) == txt.charAt(i) | regexp.charAt(j) == '.'){
                     match.add(j+1);
                 }
             }
@@ -85,8 +87,11 @@ public class NFA {
         return false;
     }
     public static void main(String[] args) {
-        String regexp = "(" + args[0] + ")";
-        String txt = args[1];
+        var stdin = new Scanner(System.in);
+        System.out.println("grep:");
+        String regexp = "(" + stdin.nextLine() + ")";
+        System.out.println("test String:");
+        String txt = stdin.nextLine();
         NFA nfa = new NFA(regexp);
         System.out.println(nfa.recognizes(txt));
     }
