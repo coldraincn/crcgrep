@@ -2,6 +2,7 @@ package com.coldraincn.crcgrep.common;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Stack;
@@ -92,7 +93,11 @@ public class NFA {
         String regexp = "(" + stdin.nextLine() + ")";
         System.out.println("test String:");
         String txt = stdin.nextLine();
+        Long startTime = Instant.now().toEpochMilli();
         NFA nfa = new NFA(regexp);
+        Long endTime = Instant.now().toEpochMilli();
         System.out.println(nfa.recognizes(txt));
+        long duration = endTime - startTime;
+        System.out.println("duration:"+duration);
     }
 }
