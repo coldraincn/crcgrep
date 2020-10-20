@@ -65,7 +65,7 @@ public class NFA {
                 if(j == m){
                     continue;
                 }
-                if(regexp.charAt(j) == txt.charAt(i) | regexp.charAt(j) == '.'){
+                if(regexp.charAt(j) == txt.charAt(i) || regexp.charAt(j) == '.'){
                     match.add(j+1);
                 }
             }
